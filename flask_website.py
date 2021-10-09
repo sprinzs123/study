@@ -4,50 +4,6 @@ import datetime
 import sqlite3
 import math_calculation as calculi
 
-
-
-# All items we need to grab from back end to make report
-# Structure of the Show graph inputs are
-# Showgraph(find, y_axis, x_axis, title, limit, compare, focus, output)
-
-# user_comands.Showgraph('topic', 'y axis,' 'x axis', 'title', 5, '', '', 'html').sum_graph()
-# user_comands.graphing.sum_graph('project', 'some,' '2', '10', "", "", 'html')
-
-
-# x_axis = 'x axis go here'
-# y_axis = 'Time(hrs)'
-# title = 'title'
-# limit = 10
-# find = 'topic'
-# focus = 'review analysis'
-# compare = 'project'
-# output = 'html'
-
-
-# This are all graphs that are used in this report
-
-
-# Comented out instance of graph for debuging purposes
-
-# example = user_comands.Showgraph(find, y_axis, x_axis, title, limit, compare, focus, output).one_summary()
-# y_axis = 'Time(hrs)'
-# all_time = user_comands.Showgraph('week', 'hh', 'weeks', '', '', '', '', 'html').conseq_add()
-# top_topic = user_comands.Showgraph('topic', y_axis, 'topics', '', 5, None, None, 'pygal').sum_graph()
-# top_project = user_comands.Showgraph('project', y_axis, 'topics', '', 5, None, None, 'pygal').total_time()
-# fin_proj = user_comands.Showgraph('project', y_axis, 'topics', '', 5, None, None, 'pygal').done_proj()
-# past_history_time = user_comands.Showgraph('project', y_axis, 'topics', 'yes', 5, None, None, 'html').past_history
-# one_subject = user_comands.Showgraph('topic', y_axis, 'project', 'yes', 5, 'project', 'review analysis', 'html').one_summary()
-
-
-app = Flask(__name__)
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///study_tracker.db"
-# db = SQLAlchemy(app)
-
-@app.route('/')
-def home():
-    DATABASE = 'C://Users//cooker//PycharmProjects//pdf_report//study2.db'
-
 DATABASE = './check in and out.db'
 conn = sqlite3.connect(DATABASE)
 cur = conn.cursor()
@@ -113,7 +69,6 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     DATABASE = './check in and out.db'
-
     conn = sqlite3.connect(DATABASE)
     cur = conn.cursor()
 
@@ -164,11 +119,9 @@ def home():
         current_week = time.isocalendar()[1] - 25 + modifier
         start_week = current_week - number
 
-
         # start_week = 33
         # current_week = 40
         # print(current_week, start_week)
-
         cur.execute("SELECT " + find + " FROM study WHERE week BETWEEN ? and ? "
                                        "GROUP BY " + find + "", (start_week, current_week))
         all_names = cur.fetchall()
@@ -214,17 +167,11 @@ def home():
 
     # Each function is a graph that is going to be displayed
     # goal = 'project'
-
-    limit = 5
-    y_axis = 'Time(hrs)'
-    completed_projects = ['review analysis', 'security app', 'mit']
-
     # some global variable we need
     limit = 5
     y_axis = 'Time(hrs)'
     completed_projects = ['review analysis', 'security app', 'mit', 'study.db', 'store', 'clinic', 'store2', 'bakery', 'debate', 'interview', 'translate', 'job', 'maze', 'housing']
     working_proj = "job"
-
 
     # top subject/topic
     def get_top(goal, lmt):
@@ -238,12 +185,6 @@ def home():
     def conseq_add(goal):
         dictionary = project_time(goal)
         full_dict = calculi.conseq_add(dictionary)
-
-        title = 'All weeks study times'
-        return calculi.line_graph(full_dict, title, '', '')
-        title = 'Time completed vs weeks'
-        return calculi.line_graph(full_dict, title, 'time(hrs)', 'week')
-
         title = 'Time completed vs weeks'
         return calculi.line_graph(full_dict, title, 'time(hrs)', 'week')
 
@@ -258,13 +199,6 @@ def home():
     # project_breakdown('project', 'topic', 'flask') all projects when used flask
     def one_summary(show, find, name_proj):
         full_dict = project_breakdown(show, find, name_proj)
-
-        x_title = 'Names'
-        short_dict = calculi.sorted_dict(full_dict, limit)
-        return calculi.bar_graph(short_dict,  '', '', '')
-        short_dict = calculi.sorted_dict(full_dict, limit)
-        return calculi.pie_charts(short_dict, name_proj)
-
         short_dict = calculi.sorted_dict(full_dict, limit)
         return calculi.pie_charts(short_dict, name_proj)
 
@@ -275,14 +209,6 @@ def home():
         all_list = list(full_dict.values())
         conseq_list = list(conseq_dik.values())
         return calculi.multiple_line(all_list, conseq_list, '', '', 'pygal')
-
-
-
-    def past_focus(goal, number):
-        dictionay = past_study(goal, number)
-        # print(dictionay)
-    def past_focus(goal, number):
-        dictionay = past_study(goal, number)
 
     def past_focus(goal, number):
         dictionay = past_study(goal, number)
@@ -295,9 +221,6 @@ def home():
     top_subject = get_top('project', limit)
     week_time = conseq_add('week')
     finished = done_proj('project')
-
-    one_proj = one_summary('topic', 'project', "study.db")
-
     one_proj = one_summary('topic', 'project', working_proj)
     portfolio_proj = one_summary('topic', 'project', 'portfolio')
     study_proj = one_summary('topic', 'project', 'study.db')
@@ -306,22 +229,15 @@ def home():
     debate_proj = one_summary('topic', 'project', 'housing')
 
 
-
     past_time = past_history('week')
     past_proj = past_focus('project', past)
     past_topic = past_focus('topic', past)
-
-
-    return render_template('hi.html', top_topic=top_topic, top_subject=top_subject,
-                           week_time=week_time, finished=finished, one_proj=one_proj,
-                           past_time=past_time, past_proj=past_proj, past_topic=past_topic)
 
     return render_template('hi.html', top_topic=top_topic, top_subject=top_subject,
                            week_time=week_time, finished=finished, one_proj=one_proj,
                            past_time=past_time, past_proj=past_proj, past_topic=past_topic,
                            store_proj=store_proj, bakery_proj=bakery_proj, debate_proj=debate_proj,
                            portfolio_proj=portfolio_proj, study_proj=study_proj)
-
 
 
 if __name__ == '__main__':
