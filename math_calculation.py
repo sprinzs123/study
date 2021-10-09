@@ -2,10 +2,6 @@ import pygal
 import operator
 from pygal.style import Style
 
-
-# WORKING 10/2021
-
-
 # WORKING 10/2021
 
 # This file is responsible for all math calculations and graph creation
@@ -20,8 +16,6 @@ from pygal.style import Style
 def cal_time(total1):
     min1 = 0
     hrs = 0
-
-    # print(total1)
     for t in total1:
         if type(t) == str:
             t = (str(t))
@@ -43,21 +37,6 @@ def cal_time(total1):
     return total1
 
 
-
-
-    #         if type(t) != int:
-    #             t = t[0]
-    #             # print(t)
-    #             t = (str(t))
-    #             # print(t)
-    #             if ":" in t:
-    #                 hrs += int(t[0:2])
-    #                 min1 += int(t[3:5])
-    #                 total1 = (str(hrs + min1 // 60) + ":" + str(min1 % 60))
-    #     # print(total1)
-    # return total1
-
-
 # convert regular tine time to minutes 01:10 == int(70)
 # need to calculate average a week
 def make_minutes(time):
@@ -66,19 +45,6 @@ def make_minutes(time):
     minutes = time[0]
     total = int(hours) * 60 + int(minutes)
     return total
-
-
-
-    #         t = t[0]
-    #         # print(t)
-    #         t = (str(t))
-    #         # print(t)
-    #         if ":" in t:
-    #             hrs += int(t[0:2])
-    #             min1 += int(t[3:5])
-    #             total1 = (str(hrs + min1 // 60) + ":" + str(min1 % 60))
-    # # print(total1)
-    # return total1
 
 
 # calculate difference between 2 times, t1 is initial and t2 is last
@@ -158,34 +124,13 @@ y_title = 'time(hrs)'
 def bar_graph(dictionary, title, x_title, output):
     graph = pygal.Bar(height=400, width=500, y_title=y_title, x_title=x_title, show_legend=False)
     graph.title = title
-
-    graph.add('Polarity', dictionary.values())
+    graph.x_labels = (dictionary.keys())
     graph.add(title, dictionary.values())
     if output == 'html':
         graph.render_in_browser()
     else:
         return graph.render_data_uri()
 
-
-def line_graph(dictionary, title, x_title, output):
-    graph = pygal.Line(height=300, width=600, y_title=x_title, x_title=y_title, show_legend=False)
-    graph.title = title
-    graph.x_labels = (dictionary.keys())
-    graph.add(title, dictionary.values())
-    graph.add('Polarity', dictionary.values())
-    if output == 'html':
-        graph.render_in_browser()
-    else:
-        return graph.render_data_uri()
-
-
-def horiz_bar(dictionary, title, x_title, output):
-    # custom_style = Style(title_font_size = 50,)
-    graph = pygal.HorizontalBar(height=220, width=500, y_title=y_title, x_title=x_title,
-                                show_legend=False)
-    graph.title = title
-    graph.x_labels = (dictionary.keys())
-    graph.add('Polarity', dictionary.values())
 
 def multi_list_bar_graph(dictionary, title, x_title, y_title):
     graph = pygal.Bar(y_title=y_title, x_title=x_title, show_legend=False)
@@ -210,25 +155,6 @@ def horiz_bar(dictionary, title, x_title, output):
     graph.title = title
     graph.x_labels = (dictionary.keys())
     graph.add(title, dictionary.values())
-
-def line_graph(dictionary, title, x_title, output):
-    graph = pygal.Line(height=300, width=600, y_title=x_title, x_title=y_title, show_legend=False)
-    graph.title = title
-    graph.x_labels = (dictionary.keys())
-    graph.add('Polarity', dictionary.values())
-    if output == 'html':
-        return graph.render_in_browser()
-    else:
-        return graph.render_data_uri()
-
-
-def horiz_bar(dictionary, title, x_title, output):
-    # custom_style = Style(title_font_size = 50,)
-    graph = pygal.HorizontalBar(height=220, width=500, y_title=y_title, x_title=x_title,
-                                show_legend=False)
-    graph.title = title
-    graph.x_labels = (dictionary.keys())
-    graph.add('Polarity', dictionary.values())
     if output == 'html':
         graph.render_in_browser()
     else:
@@ -236,7 +162,6 @@ def horiz_bar(dictionary, title, x_title, output):
 
 
 def multiple_line(total, weekly, title, x_title, output):
-
     graph = pygal.Line(height=250, width=500, y_title=y_title, x_title=x_title, show_legend=True)
     graph.title = title
     graph.add('Total', total)
@@ -247,10 +172,13 @@ def multiple_line(total, weekly, title, x_title, output):
         return graph.render_data_uri()
 
 
-
 def pie_charts(dictionary, title):
     pie_chart = pygal.Pie(legend_at_bottom=True)
     pie_chart.title = title.capitalize()
     for item in dictionary:
         pie_chart.add(item, float(dictionary.get(item)))
     return pie_chart.render_data_uri()
+
+
+
+
